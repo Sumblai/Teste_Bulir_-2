@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import  { useState, useEffect, useCallback } from "react";
 import {
   Table,
   message,
@@ -31,24 +31,30 @@ interface Booking {
 }
 
 export default function BookingList() {
-  const IsIphone14ProMax = useMediaQuery({ maxWidth: 430 });
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [selectedBookingId, setSelectedBookingId] = useState<string | null>(null);
+  const [newReservationDate, setNewReservationDate] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedBookingId, setSelectedBookingId] = useState<string | null>(
-    null
-  );
-  const [newReservationDate, setNewReservationDate] = useState<string | null>(
-    null
-  );
+  const IsIphone14ProMax = useMediaQuery({ maxWidth: 430 });
+  // Função para buscar o `clientId` do localStorage
+  const getClientId = useCallback((): string | null => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser)._id : null;
+  }, []);
 
-  const clientId = "673621a108657939f712eb70";
+  // Função para buscar as reservas
+  const fetchBookings = useCallback(async () => {
+    const clientId = getClientId();
+    if (!clientId) {
+      message.error("Erro: Client ID não encontrado.");
+      return;
+    }
 
-  // Função para buscar os dados
-  const fetchBookings = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:3000/app/bulir/clientHistory/${clientId}`,
+        `https://teste-para-a-a-vaga-de-desenvolvedor.onrender.com/app/bulir/clientHistory/${clientId}`,
         { withCredentials: true }
       );
 
@@ -56,7 +62,7 @@ export default function BookingList() {
 
       if (response.status === 200 && Array.isArray(response.data.bookings)) {
         const formattedData = response.data.bookings.map((item: Booking) => ({
-          key: item._id, // A chave deve ser única, então usamos _id como chave
+          key: item._id,
           ...item,
         }));
         setBookings(formattedData);
@@ -71,17 +77,24 @@ export default function BookingList() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [getClientId]);
 
+  // Chama fetchBookings ao carregar o componente
   useEffect(() => {
     fetchBookings();
-  }, []);
+  }, [fetchBookings]); // A dependência é o fetchBookings
 
   // Função para apagar o booking
   const deleteBooking = async (bookingId: string) => {
+    const clientId = getClientId();
+    if (!clientId) {
+      message.error("Erro: Client ID não encontrado.");
+      return;
+    }
+
     try {
       await axios.delete(
-        `http://localhost:3000/app/bulir/booking/${bookingId}`,
+        `https://teste-para-a-a-vaga-de-desenvolvedor.onrender.com/app/bulir/booking/${bookingId}`,
         {
           data: { clientId }, // Envia o ID do cliente no corpo
           withCredentials: true,
@@ -104,7 +117,7 @@ export default function BookingList() {
 
     try {
       await axios.put(
-        `http://localhost:3000/app/bulir/booking/${selectedBookingId}/update-date`,
+        `https://teste-para-a-a-vaga-de-desenvolvedor.onrender.com/app/bulir/booking/${selectedBookingId}/update-date`,
         { newReservationDate },
         { withCredentials: true }
       );

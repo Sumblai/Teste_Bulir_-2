@@ -46,7 +46,7 @@ export const ServiceList: React.FC = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:3000/app/bulir/serviceList/${providerId}`,
+        `https://teste-para-a-a-vaga-de-desenvolvedor.onrender.com/app/bulir/serviceList/${providerId}`,
         { withCredentials: true }
       );
 
@@ -86,7 +86,7 @@ export const ServiceList: React.FC = () => {
     }
 
     try {
-      await axios.delete("http://localhost:3000/app/bulir/deleteService", {
+      await axios.delete("https://teste-para-a-a-vaga-de-desenvolvedor.onrender.com/app/bulir/deleteService", {
         withCredentials: true,
         data: { serviceId: id, providerId },
       });
@@ -123,7 +123,7 @@ export const ServiceList: React.FC = () => {
     try {
       if (editingService) {
         await axios.put(
-          "http://localhost:3000/app/bulir/updateService",
+          "https://teste-para-a-a-vaga-de-desenvolvedor.onrender.com/app/bulir/updateService",
           {
             serviceId: editingService.id,
             name: editingService.name,
@@ -158,7 +158,7 @@ export const ServiceList: React.FC = () => {
     try {
       if (editingService) {
         await axios.put(
-          "http://localhost:3000/app/bulir/updateSlots",
+          "https://teste-para-a-a-vaga-de-desenvolvedor.onrender.com/app/bulir/updateSlots",
           {
             serviceId: editingService.id,
             availableSlots: editingService.availableSlots,

@@ -115,7 +115,7 @@ useEffect(() => {
       const clientId = user._id;
       try {
         await axios.put(
-          "http://localhost:3000/app/bulir/updateBalance",
+          "https://teste-para-a-a-vaga-de-desenvolvedor.onrender.com/app/bulir/updateBalance",
           {
             clientId,
             amount: amountToAdd,

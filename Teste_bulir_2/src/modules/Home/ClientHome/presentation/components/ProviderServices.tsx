@@ -34,7 +34,7 @@ export default function ProviderServices() {
     setLoading(true);
     try {
       const response = await axios.get(
-        "http://localhost:3000/app/bulir/getAllServices",
+        "https://teste-para-a-a-vaga-de-desenvolvedor.onrender.com/app/bulir/getAllServices",
         {
           withCredentials: true,
         }
@@ -80,7 +80,7 @@ export default function ProviderServices() {
       };
 
       const response = await axios.post(
-        "http://localhost:3000/app/bulir/booking",
+        "https://teste-para-a-a-vaga-de-desenvolvedor.onrender.com/app/bulir/booking",
         bookingData,
         { withCredentials: true }
       );

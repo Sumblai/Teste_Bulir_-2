@@ -45,7 +45,7 @@ const Register: React.FC = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/app/bulir/register",
+        "https://teste-para-a-a-vaga-de-desenvolvedor.onrender.com/app/bulir/register",
         {
           name,
           nif,

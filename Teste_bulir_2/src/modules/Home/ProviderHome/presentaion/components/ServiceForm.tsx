@@ -53,7 +53,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ onAddService }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/app/bulir/service",
+        "https://teste-para-a-a-vaga-de-desenvolvedor.onrender.com/app/bulir/service",
         serviceData,
         { withCredentials: true }
       );

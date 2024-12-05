@@ -22,7 +22,7 @@ export const BookingHistoryTable: React.FC = () => {
       // Obter o providerId do localStorage
       const storedUser = localStorage.getItem("user");
       if (!storedUser) {
-        message.error("Usuário não encontrado no localStorage.");
+        console.log("Usuário não encontrado no localStorage.");
         return;
       }
 
@@ -31,7 +31,7 @@ export const BookingHistoryTable: React.FC = () => {
 
       // Fazer requisição à API
       const response = await axios.get(
-        `http://localhost:3000/app/bulir/BookingHistoryByProviderId/${providerId}`,
+        `https://teste-para-a-a-vaga-de-desenvolvedor.onrender.com/app/bulir/BookingHistoryByProviderId/${providerId}`,
         { withCredentials: true }
       );
 

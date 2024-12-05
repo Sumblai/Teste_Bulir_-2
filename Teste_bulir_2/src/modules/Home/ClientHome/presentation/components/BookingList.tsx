@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import {
   Table,
   message,
@@ -11,6 +11,8 @@ import {
 import axios from "axios";
 import { HomeHeader } from "./HomeHeader";
 import { useMediaQuery } from "react-responsive";
+import moment from "moment";
+
 
 interface Service {
   _id: string;
@@ -228,18 +230,19 @@ export default function BookingList() {
           okText="Atualizar"
           cancelText="Cancelar"
         >
-         <DatePicker
-  showTime
-  format="YYYY-MM-DD HH:mm:ss"
-  onChange={(value, dateString) => {
-    if (typeof dateString === "string") {
-      setNewReservationDate(dateString);
-    } else {
-      setNewReservationDate(null); 
-    }
-  }}
-  placeholder="Selecione uma nova data"
-/>
+    <DatePicker
+      showTime
+      format="YYYY-MM-DD HH:mm:ss"
+      onChange={(dateString) => {
+        if (typeof dateString === "string") {
+          setNewReservationDate(dateString);
+        } else {
+          setNewReservationDate(null);
+        }
+      }}
+      placeholder="Selecione uma nova data"
+      value={newReservationDate ? moment(newReservationDate) : null} // Usando o moment corretamente
+    />
 
         </Modal>
       </div>

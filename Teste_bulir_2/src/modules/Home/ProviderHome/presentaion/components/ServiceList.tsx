@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Form, Table, message, Popconfirm, Button, Modal, Input } from "antd";
 import axios from "axios";
 
@@ -13,6 +13,7 @@ interface ServiceType {
   companyname: string; // Campo para nome da empresa
 }
 
+
 export const ServiceList: React.FC = () => {
   const [form] = Form.useForm();
   const [services, setServices] = useState<ServiceType[]>([]);
@@ -21,10 +22,6 @@ export const ServiceList: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   // Função para buscar o `providerId` do localStorage
-  const getProviderId = () => {
-    const storedUser = localStorage.getItem("user");
-    return storedUser ? JSON.parse(storedUser)._id : null;
-  };
 
   // Atualiza o número de serviços no localStorage
   const updateServiceCount = (services: ServiceType[]) => {
@@ -33,7 +30,13 @@ export const ServiceList: React.FC = () => {
   };
 
   // Busca serviços do backend
-  const fetchServices = async () => {
+  const getProviderId = useCallback((): string | null => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser)._id : null;
+  }, []);
+
+  // Busca serviços do backend
+  const fetchServices = useCallback(async () => {
     const providerId = getProviderId();
     if (!providerId) {
       message.error("Erro: Provider ID não encontrado.");
@@ -62,19 +65,17 @@ export const ServiceList: React.FC = () => {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const errorMessage = error.response?.data?.message || "Erro ao buscar serviços. Tente novamente.";
-        
         console.error("Erro ao buscar serviços:", errorMessage);
         message.error(`Erro ao buscar serviços: ${errorMessage}`);
       } else {
-  
         console.error("Erro ao buscar serviços:", error);
         message.error("Erro ao buscar serviços");
       }
-      
     } finally {
       setLoading(false);
     }
-  };
+  }, [getProviderId]);
+
 
   // Deletar um serviço
   const deleteService = async (id: string) => {
@@ -185,7 +186,7 @@ export const ServiceList: React.FC = () => {
 
   useEffect(() => {
     fetchServices();
-  }, []);
+  }, [fetchServices]);
 
   const columns = [
     {

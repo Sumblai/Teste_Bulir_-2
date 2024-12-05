@@ -4,8 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
-import { login } from "../../../../app/providers/authSlice";
-
+import { login } from "../../../../../app/providers/authSlice";
 const Login: React.FC = () => {
   const [userType, setUserType] = useState<string>("client");
   const [email, setEmail] = useState<string>("");

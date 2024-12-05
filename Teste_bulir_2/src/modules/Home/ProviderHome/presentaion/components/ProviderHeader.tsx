@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { DownOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Dropdown, Space, Modal, MenuProps } from "antd";
 import { useMediaQuery } from "react-responsive";
@@ -35,30 +35,27 @@ export const ProviderHeader = () => {
   const IsIphone14ProMax = useMediaQuery({ maxWidth: 430 });
   const dispatch = useDispatch();
 
-  const loadBalance = () => {
-
-    const storedUser = localStorage.getItem("user") ?? '{}'; 
-    const StoreServicesCount = localStorage.getItem("serviceCount") ?? '0';
-    if (storedUser || StoreServicesCount) {
-      const user = JSON.parse(storedUser);
-      setName(user.name);
-      const counter = JSON.parse(StoreServicesCount);
-      setServiceConunt(counter);
-    }
-  };
-
-  const observeLocalStorage = () => {
-    const originalSetItem = localStorage.setItem;
-
-    localStorage.setItem = function (key, value) {
-      originalSetItem.apply(this, [key, value]);
-      if (key === "user") {
-        loadBalance(); // Atualiza o balance
-      }
-    };
-  };
+  const loadBalance = useCallback(() => {
+    const storedUser = localStorage.getItem("user") ?? "{}";
+    const storeServicesCount = localStorage.getItem("serviceCount") ?? "0";
+    const user = JSON.parse(storedUser);
+    setName(user.name || ""); // Garanta que name seja uma string
+    const counter = JSON.parse(storeServicesCount);
+    setServiceConunt(counter || 0); // Garanta que counter seja um número
+  }, []);
 
   useEffect(() => {
+    const observeLocalStorage = () => {
+      const originalSetItem = localStorage.setItem;
+
+      localStorage.setItem = function (key, value) {
+        originalSetItem.apply(this, [key, value]);
+        if (key === "user") {
+          loadBalance();
+        }
+      };
+    };
+
     // Carregar o balance inicialmente
     loadBalance();
 
@@ -76,7 +73,7 @@ export const ProviderHeader = () => {
     return () => {
       window.removeEventListener("storage", handleStorageChange);
     };
-  }, []);
+  }, [loadBalance]);
 
   // Função para exibir o modal de logout
   const showLogoutModal = () => {

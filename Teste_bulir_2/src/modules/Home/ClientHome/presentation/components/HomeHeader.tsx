@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { DownOutlined, PlusOutlined , UserOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -45,47 +45,46 @@ export const HomeHeader = () => {
   ////Mobiles
   const IsIphone14ProMax = useMediaQuery({ maxWidth: 430 });
   
+// Função para carregar o balance do localStorage
+const loadBalance = useCallback(() => {
+  const storedUser = localStorage.getItem("user");
+  if (storedUser) {
+    const user = JSON.parse(storedUser);
+    setBalance(user.balance);
+    setName(user.name);
+  }
+}, []); // Não depende de nada, então as dependências estão vazias
 
-  // Função para carregar o balance do localStorage
-  const loadBalance = () => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      setBalance(user.balance);
-      setName(user.name);
+// Função para observar mudanças no localStorage (mesma aba)
+const observeLocalStorage = useCallback(() => {
+  const originalSetItem = localStorage.setItem;
+
+  localStorage.setItem = function (key, value) {
+    originalSetItem.apply(this, [key, value]);
+    if (key === "user") {
+      loadBalance(); // Atualiza o balance
     }
   };
+}, [loadBalance]); // Depende de loadBalance
 
-  // Função para observar mudanças no localStorage (mesma aba)
-  const observeLocalStorage = () => {
-    const originalSetItem = localStorage.setItem;
+useEffect(() => {
+  // Carregar o balance inicialmente
+  loadBalance();
 
-    localStorage.setItem = function (key, value) {
-      originalSetItem.apply(this, [key, value]);
-      if (key === "user") {
-        loadBalance(); // Atualiza o balance
-      }
-    };
+  // Observar mudanças no localStorage
+  observeLocalStorage();
+
+  // Adicionar listener para o evento `storage` (outras abas)
+  const handleStorageChange = () => {
+    loadBalance();
   };
 
-  useEffect(() => {
-    // Carregar o balance inicialmente
-    loadBalance();
+  window.addEventListener("storage", handleStorageChange);
 
-    // Observar mudanças no localStorage
-    observeLocalStorage();
-
-    // Adicionar listener para o evento `storage` (outras abas)
-    const handleStorageChange = () => {
-      loadBalance();
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
+  return () => {
+    window.removeEventListener("storage", handleStorageChange);
+  };
+}, [loadBalance, observeLocalStorage])
 
   // Função para exibir o modal de logout
   const showLogoutModal = () => {

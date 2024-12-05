@@ -237,7 +237,7 @@ export default function ProviderServices() {
         <p>Selecione a data para a reserva:</p>
         <DatePicker
           style={{ width: "100%" }}
-          onChange={(date, dateString) => {
+          onChange={(dateString) => {
             if (typeof dateString === "string") {
               setReservationDate(dateString);
             }

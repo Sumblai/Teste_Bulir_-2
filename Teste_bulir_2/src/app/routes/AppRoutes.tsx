@@ -1,6 +1,6 @@
 import HomeClient from "../../modules/Home/ClientHome/presentation/pages/HomeClient";
 import { HomeProvider } from "../../modules/Home/ProviderHome/presentaion/pages/HomeProvider";
-import Login from "../../modules/auth/providerAuth/prsentation/ProviderAuth";
+import Login from "../../modules/auth/providerAuth/prsentation/pages/ProviderAuth";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Register from "../../modules/auth/providerAuth/prsentation/pages/Sign";
 import BookingList from "../../modules/Home/ClientHome/presentation/components/BookingList";

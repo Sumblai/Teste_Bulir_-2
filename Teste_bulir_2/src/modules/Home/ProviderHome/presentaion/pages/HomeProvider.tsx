@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import ServiceForm from "../components/ServiceForm";
 import { ServiceList } from "../components/ServiceList";
 import { ProviderHeader } from "../components/ProviderHeader";
@@ -8,6 +8,7 @@ interface ServiceType {
   name: string;
   description: string;
   price: string;
+  companyname: string; // Campo para nome da empresa
 }
 
 export const HomeProvider = () => {
@@ -65,7 +66,7 @@ export const HomeProvider = () => {
         }}
         className="ServicesList"
       >
-        <ServiceList data={services} />
+        <ServiceList />
       </div>
     </div>
   );

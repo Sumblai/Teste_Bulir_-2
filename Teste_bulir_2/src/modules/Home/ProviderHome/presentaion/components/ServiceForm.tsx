@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { message } from "antd";
 
 interface ServiceFormProps {
   onAddService: (service: {
@@ -76,11 +77,17 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ onAddService }) => {
         price: "",
         providerId: serviceData.providerId, // Mantém o providerId
       });
-    } catch (error: any) {
-      console.error("Erro ao criar serviço:", error);
-      alert(
-        error.response?.data?.message || "Ocorreu um erro ao criar o serviço."
-      );
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const errorMessage = error.response?.data?.message || "Erro ao criar serviço. Tente novamente.";
+        
+        console.error("Erro ao criar serviço:", errorMessage);
+        message.error(`Erro so actualizar slots: ${errorMessage}`);
+      } else {
+  
+        console.error("Erro ao criar serviço:", error);
+        message.error("Erro ao criar serviço");
+      }
     }
   };
 
